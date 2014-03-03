@@ -6,4 +6,6 @@ What have I modified?
 I fix the x value of each node by layer, which idicates the time of each's arriving.
 This kind of model can be used to represent DAG with time stamp.
 Still trying to add the minimum edge crossing function...
+The details of the algorithms are in [A Technique for Drawing Directed Graphs](http://www.graphviz.org/Documentation/TSE93.pdf)
+
 
