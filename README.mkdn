@@ -1,5 +1,7 @@
-A refined force-directed layout algorithm by layer based on [Springy](http://getspringy.com/)
+A refined force-directed layout algorithm by layer
 ====
+
+based on [Springy](http://getspringy.com/)
 
 What have I modified?
 ----
