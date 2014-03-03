@@ -11,26 +11,26 @@ var graph = new Springy.Graph();
 //   ondoubleclick: function() { console.log("Hello!"); }
 // });
 
-var n1 = graph.newNode(1,{label: '1'});
-var n2 = graph.newNode(1,{label: '2'});
-var n3 = graph.newNode(1,{label: '3'});
-var n4 = graph.newNode(2,{label: '4'});
-var n5 = graph.newNode(2,{label: '5'});
-var n6 = graph.newNode(3,{label: '6'});
-var n7 = graph.newNode(3,{label: '7'});
-var n8 = graph.newNode(4,{label: '8'});
-var n9 = graph.newNode(4,{label: '9'});
-var n10 = graph.newNode(4,{label: '10'});
+var n1 = graph.newNode(1,0,{label: '1'});
+var n2 = graph.newNode(1,0,{label: '2'});
+var n3 = graph.newNode(1,0,{label: '3'});
+var n4 = graph.newNode(2,0,{label: '4'});
+var n5 = graph.newNode(2,0,{label: '5'});
+var n6 = graph.newNode(3,0,{label: '6'});
+var n7 = graph.newNode(3,0,{label: '7'});
+var n8 = graph.newNode(4,0,{label: '8'});
+var n9 = graph.newNode(4,0,{label: '9'});
+var n10 = graph.newNode(4,0,{label: '10'});
 
-graph.newEdge(n1, n4, {color: '#00A0B0'});
-graph.newEdge(n2, n4, {color: '#00A0B0'});
-graph.newEdge(n4, n6, {color: '#CC333F'});
-graph.newEdge(n6, n8, {color: '#EB6841'});
-graph.newEdge(n4, n7, {color: '#CC333F'});
-graph.newEdge(n3, n5, {color: '#00A0B0'});
-graph.newEdge(n5, n7, {color: '#CC333F'});
-graph.newEdge(n7, n9, {color: '#EB6841'});
-graph.newEdge(n7, n10, {color: '#EB6841'});
+graph.newEdge(n1, n4, 1, {color: '#00A0B0'});
+graph.newEdge(n2, n4, 2, {color: '#00A0B0'});
+graph.newEdge(n4, n6, 4, {color: '#CC333F'});
+graph.newEdge(n6, n8, 3, {color: '#EB6841'});
+graph.newEdge(n4, n7, 2, {color: '#CC333F'});
+graph.newEdge(n3, n5, 4, {color: '#00A0B0'});
+graph.newEdge(n5, n7, 9, {color: '#CC333F'});
+graph.newEdge(n7, n9, 1, {color: '#EB6841'});
+graph.newEdge(n7, n10, 5, {color: '#EB6841'});
 
 
 jQuery(function(){

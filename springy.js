@@ -29,9 +29,10 @@ proudly powered by Rui Dai 2014.2 */
 		this.eventListeners = [];
 	};
 
-	var Node = Springy.Node = function(id,layer,data) {
+	var Node = Springy.Node = function(id,layer,rank,data) {
 		this.id = id;
 		this.layer = layer;
+		this.rank = rank;
 		this.data = (data !== undefined) ? data : {};
 
 	// Data fields used by layout algorithm in this file:
@@ -117,18 +118,18 @@ proudly powered by Rui Dai 2014.2 */
 			}
 			var attr = e[2];
 
-			this.newEdge(node1, node2, attr);
+			this.newEdge(node1, node2, weight, attr);
 		}
 	};
 
-	Graph.prototype.newNode = function(layer,data) {
-		var node = new Node(this.nextNodeId++,layer,data);
+	Graph.prototype.newNode = function(layer,rank,data) {
+		var node = new Node(this.nextNodeId++,layer,rank,data);
 		this.addNode(node);
 		return node;
 	};
 
-	Graph.prototype.newEdge = function(source, target, data) {
-		var edge = new Edge(this.nextEdgeId++, source, target, data);
+	Graph.prototype.newEdge = function(source, target, weight, data) {
+		var edge = new Edge(this.nextEdgeId++, source, target, weight, data);
 		this.addEdge(edge);
 		return edge;
 	};
@@ -316,7 +317,7 @@ proudly powered by Rui Dai 2014.2 */
 	Layout.ForceDirected.prototype.point = function(node) {
 		if (!(node.id in this.nodePoints)) {
 			var mass = (node.data.mass !== undefined) ? node.data.mass : 1.0;
-			this.nodePoints[node.id] = new Layout.ForceDirected.Point((Vector.random(node.group)), mass);
+			this.nodePoints[node.id] = new Layout.ForceDirected.Point((Vector.random(node.layer)), mass);
 		}
 
 		return this.nodePoints[node.id];
@@ -413,22 +414,67 @@ proudly powered by Rui Dai 2014.2 */
 		});
 	};
 
-	Layout.ForceDirected.prototype.medianFunction = function() {
-		this.eachNode(function(n1, point1) {
-			this.eachNode(function(n2, point2) {
-				if (point1 !== point2)
-				{
-					var d = point1.p.subtract(point2.p);
-					var distance = d.magnitude() + 0.1; // avoid massive forces at small distances (and divide by zero)
-					var direction = d.normalise();
+	//to be completed  ordering algorithms
+	Layout.ForceDirected.prototype.vertexOrdering = function() {
+		// psuedo-code in the paper
+		// var best = this.layout;
+		// for i in range(0,max_iterations)
+		// 	nodeRank(this.layout);
+		// 	tranpose(this.layout);
+		// 	if crossingNumber(this.layout) < crossingNumber(best)
+		// 		best = this.layout;
+		// return best
+	};
 
-					// apply force to each end point
-					point1.applyForce(direction.multiply(this.repulsion).divide(distance * distance * 0.5));
-					point2.applyForce(direction.multiply(this.repulsion).divide(distance * distance * -0.5));
+	//to be completed
+	Layout.ForceDirected.prototype.nodeRank = function() {
+		//rank each node by median function
+		this.eachNode(function(node, point1 {
+			//what is a controll parameter???
+
+		});
+	};
+
+	//to be completed
+	Layout.ForceDirected.prototype.tranpose = function() {
+	};
+
+	//if two edges cross
+    Layout.ForceDirected.prototype.isCrossing = function(a, b, c, d) {
+
+		var denominator = (b.y - a.y) * (d.x - c.x) - (a.x - b.x) * (c.y - d.y);
+		if (denominator == 0) {
+			return false;
+		}
+		var x = ((b.x - a.x) * (d.x - c.x) * (c.y - a.y) + (b.y - a.y) * (d.x - c.x) * a.x - (d.y - c.y) * (b.x - a.x) * c.x) / denominator;
+		var y = -((b.y - a.y) * (d.y - c.y) * (c.x - a.x) + (b.x - a.x) * (d.y - c.y) * a.y - (d.x - c.x) * (b.y - a.y) * c.y) / denominator;
+
+		if ((x - a.x) * (x - b.x) <= 0 && (y - a.y) * (y - b.y) <= 0
+			&& (x - c.x) * (x - d.x) <= 0 && (y - c.y) * (y - d.y) <= 0) {
+
+			return true
+		}
+
+		return false
+	)};
+
+	//return total crossing number of current layout
+	Layout.ForceDirected.prototype.crossingNumber = function(layout) {
+		//return the crossing number of the whole
+		var g= graph
+		var number = 0;
+		l.eachEdge(function(e1) {
+			l.eachEdge(function(e2) {
+				if (e1 !== e2)
+				{
+					if l.isCrossing(e1.node1,e1.node2,e2.node1,e2.node2)
+						number++;
 				}
 			});
 		});
-	};
+		//each crossing has been counted by twice
+		return number/2;
+	)};
 
 	Layout.ForceDirected.prototype.attractToCentre = function() {
 		this.eachNode(function(node, point) {
@@ -490,6 +536,9 @@ proudly powered by Rui Dai 2014.2 */
 		this._stop = false;
 
 		if (onRenderStart !== undefined) { onRenderStart(); }
+
+		// First,we reduce the edge crossing number
+		// t.vertexOrdering()
 
 		Springy.requestAnimationFrame(function step() {
 			t.applyCoulombsLaw();
@@ -566,8 +615,8 @@ proudly powered by Rui Dai 2014.2 */
 		this.y = y;
 	};
 
-	Vector.random = function(group) {
-		return new Vector(100.0 * group , 10.0 * (Math.random() - 0.5));
+	Vector.random = function(layer) {
+		return new Vector(100.0 * layer , 10.0 * (Math.random() - 0.5));
 	};
 
 	Vector.prototype.add = function(v2) {
@@ -632,6 +681,7 @@ proudly powered by Rui Dai 2014.2 */
 	 * @param onRenderStop optional callback function that gets executed whenever rendering stops.
 	 * @param onRenderStart optional callback function that gets executed whenever rendering starts.
 	 */
+
 	var Renderer = Springy.Renderer = function(layout, clear, drawEdge, drawNode, onRenderStop, onRenderStart) {
 		this.layout = layout;
 		this.clear = clear;
