@@ -1,9 +1,15 @@
-Springy
+A refined force-directed layout algorithms powered by [Springy](http://getspringy.com/)
 ====
 
-A force directed graph layout algorithm in JavaScript.
+What have I modified?
+----
+I fix the x value of each node by group, which idicates the time of each's arriving.
+This kind of model can be used to represent some DAG with time stamp.
 
-[http://getspringy.com/](http://getspringy.com/)
+
+(the following discription is by Springy)
+----
+A force directed graph layout algorithm in JavaScript.
 
 What is this?
 ----

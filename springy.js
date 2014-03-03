@@ -52,8 +52,9 @@
 		this.eventListeners = [];
 	};
 
-	var Node = Springy.Node = function(id, data) {
+	var Node = Springy.Node = function(id,group,data) {
 		this.id = id;
+		this.group = group;
 		this.data = (data !== undefined) ? data : {};
 
 	// Data fields used by layout algorithm in this file:
@@ -143,8 +144,8 @@
 		}
 	};
 
-	Graph.prototype.newNode = function(data) {
-		var node = new Node(this.nextNodeId++, data);
+	Graph.prototype.newNode = function(group,data) {
+		var node = new Node(this.nextNodeId++,group,data);
 		this.addNode(node);
 		return node;
 	};
@@ -338,7 +339,7 @@
 	Layout.ForceDirected.prototype.point = function(node) {
 		if (!(node.id in this.nodePoints)) {
 			var mass = (node.data.mass !== undefined) ? node.data.mass : 1.0;
-			this.nodePoints[node.id] = new Layout.ForceDirected.Point(Vector.random(), mass);
+			this.nodePoints[node.id] = new Layout.ForceDirected.Point((Vector.random(node.group)), mass);
 		}
 
 		return this.nodePoints[node.id];
@@ -569,12 +570,12 @@
 		this.y = y;
 	};
 
-	Vector.random = function() {
-		return new Vector(10.0 * (Math.random() - 0.5), 10.0 * (Math.random() - 0.5));
+	Vector.random = function(group) {
+		return new Vector(100.0 * group , 10.0 * (Math.random() - 0.5));
 	};
 
 	Vector.prototype.add = function(v2) {
-		return new Vector(this.x + v2.x, this.y + v2.y);
+		return new Vector(this.x, this.y + v2.y);
 	};
 
 	Vector.prototype.subtract = function(v2) {
