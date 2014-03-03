@@ -1,29 +1,6 @@
-/**
- * Springy v2.3.0
- *
- * Copyright (c) 2010-2013 Dennis Hotson
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use,
- * copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following
- * conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
- */
+/*A refined force-directed layout algorithm based on Springy
+
+proudly powered by Rui Dai 2014.2 */
 
 (function() {
 	// Enable strict mode for EC5 compatible browsers
@@ -52,9 +29,9 @@
 		this.eventListeners = [];
 	};
 
-	var Node = Springy.Node = function(id,group,data) {
+	var Node = Springy.Node = function(id,layer,data) {
 		this.id = id;
-		this.group = group;
+		this.layer = layer;
 		this.data = (data !== undefined) ? data : {};
 
 	// Data fields used by layout algorithm in this file:
@@ -144,8 +121,8 @@
 		}
 	};
 
-	Graph.prototype.newNode = function(group,data) {
-		var node = new Node(this.nextNodeId++,group,data);
+	Graph.prototype.newNode = function(layer,data) {
+		var node = new Node(this.nextNodeId++,layer,data);
 		this.addNode(node);
 		return node;
 	};
@@ -436,6 +413,23 @@
 		});
 	};
 
+	Layout.ForceDirected.prototype.medianFunction = function() {
+		this.eachNode(function(n1, point1) {
+			this.eachNode(function(n2, point2) {
+				if (point1 !== point2)
+				{
+					var d = point1.p.subtract(point2.p);
+					var distance = d.magnitude() + 0.1; // avoid massive forces at small distances (and divide by zero)
+					var direction = d.normalise();
+
+					// apply force to each end point
+					point1.applyForce(direction.multiply(this.repulsion).divide(distance * distance * 0.5));
+					point2.applyForce(direction.multiply(this.repulsion).divide(distance * distance * -0.5));
+				}
+			});
+		});
+	};
+
 	Layout.ForceDirected.prototype.attractToCentre = function() {
 		this.eachNode(function(node, point) {
 			var direction = point.p.multiply(-1.0);
@@ -507,6 +501,8 @@
 			if (render !== undefined) {
 				render();
 			}
+
+			//
 
 			// stop simulation when energy of the system goes below a threshold
 			if (t._stop || t.totalEnergy() < 0.01) {
