@@ -41,8 +41,9 @@ proudly powered by Rui Dai 2014.2 */
 	// this.data.label
 	};
 
-	var Edge = Springy.Edge = function(id, source, target, data) {
+	var Edge = Springy.Edge = function(id, source, target, weight, data) {
 		this.id = id;
+		this.weight = weight;
 		this.source = source;
 		this.target = target;
 		this.data = (data !== undefined) ? data : {};
@@ -116,7 +117,8 @@ proudly powered by Rui Dai 2014.2 */
 			if (node2 == undefined) {
 				throw new TypeError("invalid node name: " + e[1]);
 			}
-			var attr = e[2];
+			var weight = e[2]
+			var attr = e[3];
 
 			this.newEdge(node1, node2, weight, attr);
 		}
@@ -414,67 +416,68 @@ proudly powered by Rui Dai 2014.2 */
 		});
 	};
 
-	//to be completed  ordering algorithms
-	Layout.ForceDirected.prototype.vertexOrdering = function() {
-		// psuedo-code in the paper
-		// var best = this.layout;
-		// for i in range(0,max_iterations)
-		// 	nodeRank(this.layout);
-		// 	tranpose(this.layout);
-		// 	if crossingNumber(this.layout) < crossingNumber(best)
-		// 		best = this.layout;
-		// return best
-	};
+	// //to be completed  ordering algorithms
+	// Layout.ForceDirected.prototype.vertexOrdering = function() {
+	// 	// psuedo-code in the paper
+	// 	// var best = this.layout;
+	// 	// for i in range(0,max_iterations)
+	// 	// 	nodeRank(this.layout);
+	// 	// 	tranpose(this.layout);
+	// 	// 	if crossingNumber(this.layout) < crossingNumber(best)
+	// 	// 		best = this.layout;
+	// 	// return best
+	// };
 
-	//to be completed
-	Layout.ForceDirected.prototype.nodeRank = function() {
-		//rank each node by median function
-		this.eachNode(function(node, point1 {
-			//what is a controll parameter???
+	// //to be completed
+	// Layout.ForceDirected.prototype.nodeRank = function() {
+	// 	//rank each node by median function
+	// 	this.eachNode(function(node, point1 {
+	// 		//what is a controll parameter???
 
-		});
-	};
+	// 	});
+	// };
 
-	//to be completed
-	Layout.ForceDirected.prototype.tranpose = function() {
-	};
+	// //to be completed
+	// Layout.ForceDirected.prototype.tranpose = function() {
+	// };
 
 	//if two edges cross
-    Layout.ForceDirected.prototype.isCrossing = function(a, b, c, d) {
+ //    Layout.ForceDirected.prototype.isCrossing = function(a, b, c, d) {
 
-		var denominator = (b.y - a.y) * (d.x - c.x) - (a.x - b.x) * (c.y - d.y);
-		if (denominator == 0) {
-			return false;
-		}
-		var x = ((b.x - a.x) * (d.x - c.x) * (c.y - a.y) + (b.y - a.y) * (d.x - c.x) * a.x - (d.y - c.y) * (b.x - a.x) * c.x) / denominator;
-		var y = -((b.y - a.y) * (d.y - c.y) * (c.x - a.x) + (b.x - a.x) * (d.y - c.y) * a.y - (d.x - c.x) * (b.y - a.y) * c.y) / denominator;
+	// 	var denominator = (b.y - a.y) * (d.x - c.x) - (a.x - b.x) * (c.y - d.y);
+	// 	if (denominator == 0) {
+	// 		return false;
+	// 	}
+	// 	var x = ((b.x - a.x) * (d.x - c.x) * (c.y - a.y) + (b.y - a.y) * (d.x - c.x) * a.x - (d.y - c.y) * (b.x - a.x) * c.x) / denominator;
+	// 	var y = -((b.y - a.y) * (d.y - c.y) * (c.x - a.x) + (b.x - a.x) * (d.y - c.y) * a.y - (d.x - c.x) * (b.y - a.y) * c.y) / denominator;
 
-		if ((x - a.x) * (x - b.x) <= 0 && (y - a.y) * (y - b.y) <= 0
-			&& (x - c.x) * (x - d.x) <= 0 && (y - c.y) * (y - d.y) <= 0) {
+	// 	if ((x - a.x) * (x - b.x) <= 0 && (y - a.y) * (y - b.y) <= 0
+	// 		&& (x - c.x) * (x - d.x) <= 0 && (y - c.y) * (y - d.y) <= 0) {
 
-			return true
-		}
+	// 		return true
+	// 	}
 
-		return false
-	)};
+	// 	return false
+	// )};
 
-	//return total crossing number of current layout
-	Layout.ForceDirected.prototype.crossingNumber = function(layout) {
-		//return the crossing number of the whole
-		var g= graph
-		var number = 0;
-		l.eachEdge(function(e1) {
-			l.eachEdge(function(e2) {
-				if (e1 !== e2)
-				{
-					if l.isCrossing(e1.node1,e1.node2,e2.node1,e2.node2)
-						number++;
-				}
-			});
-		});
-		//each crossing has been counted by twice
-		return number/2;
-	)};
+	// //return total crossing number of current layout
+	// Layout.ForceDirected.prototype.crossingNumber = function(layout) {
+	// 	//return the crossing number of the whole
+	// 	var g= graph
+	// 	var number = 0;
+	// 	l.eachEdge(function(e1) {
+	// 		l.eachEdge(function(e2) {
+	// 			if (e1 != e2)
+	// 			{
+	// 				if l.isCrossing(e1.node1,e1.node2,e2.node1,e2.node2)
+	// 				{number++;}
+
+	// 			}
+	// 		});
+	// 	});
+	// 	//each crossing has been counted by twice
+	// 	return number/2;
+	// )};
 
 	Layout.ForceDirected.prototype.attractToCentre = function() {
 		this.eachNode(function(node, point) {
